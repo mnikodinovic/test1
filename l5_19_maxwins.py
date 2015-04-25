@@ -132,5 +132,3 @@ def test():
 
 
 print test()
-
-

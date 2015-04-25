@@ -88,13 +88,15 @@ def Pwin2(state):
 
 @memo
 def Pwin3(me, you, pending):
-    print me, you, pending
+
     if me + pending >= goal:
         return 1
     elif you >= goal:
         return 0
     else:
-        return (1 - Pwin3(you, me + 1, 0) + sum(Pwin3(me, you, pending + d) for d in (2, 3, 4, 5, 6)))/6.
+        temp = (1 - Pwin3(you, me + 1, 0) + sum(Pwin3(me, you, pending + d) for d in (2, 3, 4, 5, 6))) / 6.
+        print me, you, pending, temp
+        return temp
 
 
 def test():

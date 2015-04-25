@@ -42,7 +42,22 @@ def do(action, state):
     "Apply action to state, returning a new state."
     # Make sure you always use up one card.
     #
-    # your code here
+
+    score, yard, cards = state
+
+    temp = list(cards)
+    drawn_card = temp.pop(random.randint(0, len(temp) - 1))
+    cards = ''.join(temp)
+
+    if action == 'gather':
+        score = score + yard
+        yard = 0
+    if action == 'wait':
+        yard = yard + 1 if drawn_card == 'H' else 0
+
+    state = (score, yard, cards)
+
+    return state
 
 
 def take5(state):
@@ -60,12 +75,19 @@ def average_score(strategy, N=1000):
 
 def superior(A, B=take5):
     "Does strategy A have a higher average score than B, by more than 1.5 point?"
-    return average_score(A) - average_score(B) > 1.5
+    a = average_score(A)
+    b = average_score(B)
+    print 'a: ', a,
+    print 'b: ', b, a - b
+    return a - b > 1.5
 
 
 def strategy(state):
     (score, yard, cards) = state
-    # your code here
+    if yard < 3:
+        return 'wait'
+    else:
+        return 'gather'
 
 
 def test():
