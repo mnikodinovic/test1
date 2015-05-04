@@ -32,16 +32,19 @@ def memo(f):
 
     def _f(*args):
         try:
-            return cache[args]
+            # if cache[args[0]]:
+            # print 'nadjeno', cache[args[0]]
+            return cache[args[0]]
         except KeyError:
             result = f(*args)
-            print 'pozivajuca f-ja:', inspect.stack()[1][3]
-            if inspect.stack()[1][3] != 'find_prefixes':  # pamtimo samo rezultate prvog poziva f-je
-                cache[args] = result
-                print cache
+            # print 'pozivajuca f-ja:', inspect.stack()[1][3]
+            # if inspect.stack()[1][3] != 'find_prefixes':  # pamtimo samo rezultate prvog poziva f-je
+            cache[args[0]] = result
+            # print '---------------- kes:', cache
 
             return result
         except TypeError:
+            # print 'ne ide'
             # some element of args can't be a dict key
             return f(args)
 
@@ -117,21 +120,38 @@ def legal_prefix(i, row):
 prev_hand, prev_results = '', set()  # cache for find_prefixes
 
 
-@memo
+# @memo
 def find_prefixes(hand, pre='', results=None):
+    """Find all prefixes (of words) that can be made from letters in hand."""
+    # global prev_hand, prev_results
+    # if hand == prev_hand: return prev_results
+    # if results is None: results = set()
+    # if pre == '': prev_hand, prev_results = hand, results
+    # if pre in WORDS or pre in PREFIXES: results.add(pre)
+    # if pre in PREFIXES:
+    # for L in hand:
+    #         find_prefixes(hand.replace(L, '', 1), pre+L, results)
+    # return results
     """Find all prefixes (of words) that can be made from letters in hand."""
     if results is None: results = set()
     if pre in PREFIXES:
+        results.add(pre)
         for L in hand:
             find_prefixes(hand.replace(L, '', 1), pre + L, results)
     return results
 
+# @memo
+# def fib(n):
+# if n < 2:
+#         return n
+#     return fib(n - 1) + fib(n - 2)
 
-@memo
-def fib(n):
-    if n < 2:
-        return n
-    return fib(n - 1) + fib(n - 2)
-
-
-print find_prefixes('ABCDE')
+rezultat = set(
+    ['', 'BE', 'BEH', 'KH', 'BEN', 'BA', 'ACE', 'NAE', 'BEC', 'CH', 'ACH', 'CHAN', 'BACK', 'BENC', 'B', 'BAC', 'BAN',
+     'CAB', 'NEC', 'HA', 'HAN', 'BAH', 'EH', 'KEN', 'NEA', 'NAH', 'BEHA', 'HEA', 'CEN', 'EAC', 'NE', 'KNE', 'ENC', 'H',
+     'KHA', 'HE', 'E', 'K', 'A', 'CHA', 'AC', 'AB', 'AE', 'CHE', 'EK', 'KAB', 'AH', 'CA', 'EB', 'EA', 'HAE', 'CE', 'AN',
+     'NAB', 'BEA', 'EC', 'NEB', 'HEN', 'BECA', 'BANK', 'NECK', 'ANE', 'KA', 'KE', 'KAE', 'AHE', 'C', 'ANC', 'KN', 'KEA',
+     'N', 'EN', 'EACH', 'NA', 'CAN'])
+assert find_prefixes('ABCEHKN') == rezultat
+greske = [i for i in rezultat if i not in PREFIXES]
+print greske
