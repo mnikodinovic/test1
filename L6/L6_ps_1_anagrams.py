@@ -24,13 +24,40 @@ def anagrams(phrase, shortest=2):
     lexicographic order (not all permutations)."""
     # your code here
 
-    root = ''
+    # phrase = phrase.replace(' ', '')
+    prefix = ''
     results = set()
 
-    def combine(remainder, shortest):
-        words = find_words(phrase)
+    def find_anagrams(remainder, prefix, shortest=2):
 
-        for word in words
+        # print 'prefiks', prefix, 'remainder', remainder
+        words = find_words(remainder)
+        # print 'rijeci:', words
+
+        if words:
+            for word in words:
+                print 'r', word
+
+                if len(prefix) > 0:
+                    prefix = prefix + ' ' + word
+                else:
+                    prefix = word
+
+                remainder = removed(remainder, prefix)
+                if word == 'DOCTOR':
+                    print 'prefiks', prefix, 'remainder', remainder
+
+                if len(prefix.replace(' ', '')) == len(phrase.replace(' ', '')) + 1:
+                    # print 'prefiks koji dodajemo je', prefix
+                    results.add(prefix)
+
+                if remainder: find_anagrams(remainder, prefix)
+
+        # print
+        return 1
+
+    find_anagrams(phrase, prefix)
+    return results
 
 
 # ------------
@@ -92,6 +119,6 @@ def test():
 # print test()
 # for (score, (i, j), (di, dj), word) in find_words('DOCTOR WHO'):
 # print word
-print find_words('DOCTOR WHO')
-print removed('DOCTOR WHO', 'COT  ')
-print anagrams('DOCTOR WHO')
+# print find_words('DOCTOR WHO')
+# print removed('DOCTOR WHO', 'COT  ')
+print anagrams('TORCHWOOD')
