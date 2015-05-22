@@ -24,39 +24,35 @@ def anagrams(phrase, shortest=2):
     lexicographic order (not all permutations)."""
     # your code here
 
-    # phrase = phrase.replace(' ', '')
-    prefix = ''
     results = set()
 
-    def find_anagrams(remainder, prefix, shortest=2):
+    def find_anagrams(phrase):
+        print 'called find_anagrams'
 
-        # print 'prefiks', prefix, 'remainder', remainder
-        words = find_words(remainder)
-        # print 'rijeci:', words
+        if phrase == '': # pretraga je uspjela ako smo dobili da je ostatak ''
+            return 0
 
-        if words:
-            for word in words:
-                print 'r', word
+        if find_words(phrase):
+            print find_words(phrase)
 
-                if len(prefix) > 0:
-                    prefix = prefix + ' ' + word
-                else:
-                    prefix = word
+            for word in find_words(phrase):
+                print word
+                remainder = removed(phrase, word)
 
-                remainder = removed(remainder, prefix)
-                if word == 'DOCTOR':
-                    print 'prefiks', prefix, 'remainder', remainder
+                anagram = find_anagrams(remainder)
 
-                if len(prefix.replace(' ', '')) == len(phrase.replace(' ', '')) + 1:
-                    # print 'prefiks koji dodajemo je', prefix
-                    results.add(prefix)
+                if anagram == 0:
+                    print word
+                    return word
 
-                if remainder: find_anagrams(remainder, prefix)
+                if anagram == 1:
+                    print 'vracamo 1'
+                    return 1
+        else:  # ako ne mozemo naci rijeci u preostalim slovima onda pretraga nije uspjela
+            print 'out of words, phrase is', phrase
+            return 1
 
-        # print
-        return 1
-
-    find_anagrams(phrase, prefix)
+    results = find_anagrams(phrase)
     return results
 
 
@@ -121,4 +117,4 @@ def test():
 # print word
 # print find_words('DOCTOR WHO')
 # print removed('DOCTOR WHO', 'COT  ')
-print anagrams('TORCHWOOD')
+anagrams('TORCHWOOD')
