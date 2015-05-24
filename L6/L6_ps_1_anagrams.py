@@ -26,33 +26,48 @@ def anagrams(phrase, shortest=2):
 
     results = set()
 
-    def find_anagrams(phrase):
-        print 'called find_anagrams'
+    def find_anagrams(phrase, current):
+        # print 'called find_anagrams, ', current
 
         if phrase == '': # pretraga je uspjela ako smo dobili da je ostatak ''
+            # print 'uspjeli: ', current
             return 0
 
-        if find_words(phrase):
-            print find_words(phrase)
+        words = find_words(phrase)
 
-            for word in find_words(phrase):
-                print word
+        if words:
+            # print 'rijeci:', words
+
+            for word in words:
+
+                current.append(word)
+
                 remainder = removed(phrase, word)
-
-                anagram = find_anagrams(remainder)
+                print 'remainder', remainder, 'current', current
+                anagram = find_anagrams(remainder, current)
 
                 if anagram == 0:
-                    print word
-                    return word
+                    # print 'current', current
+                    results.add(' '.join(current))
+                    print 'uspjeh, odbacujemo rijec', current[-1], 'iz', current
+                    current.pop()
 
-                if anagram == 1:
-                    print 'vracamo 1'
-                    return 1
-        else:  # ako ne mozemo naci rijeci u preostalim slovima onda pretraga nije uspjela
-            print 'out of words, phrase is', phrase
+                if anagram == 1:  # ako ima jos rijeci, nastavljamo pretragu
+                    if current:
+                        print 'neuspjeh, odbacujemo rijec', current[-1], 'iz', current
+                        current.pop()
+
+            if current:
+                current.pop()
+            print "jedna petlja je zavrsila...novi current", current
+            return results
+
+        else:  # ako ne mozemo naci rijeci u preostalim slovima onda pretraga nije uspjela, odbacujemo zadnju rijec
+            # print 'out of words, phrase is', phrase
+            current.pop()
             return 1
 
-    results = find_anagrams(phrase)
+    results = find_anagrams(phrase, [])
     return results
 
 
@@ -112,9 +127,11 @@ def test():
         'CON HYP TI'])
     return 'tests pass'
 
+
+print anagrams('TORCHWOOD')
 # print test()
 # for (score, (i, j), (di, dj), word) in find_words('DOCTOR WHO'):
 # print word
 # print find_words('DOCTOR WHO')
 # print removed('DOCTOR WHO', 'COT  ')
-anagrams('TORCHWOOD')
+# anagrams('TORCHWOOD')
